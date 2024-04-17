@@ -1,4 +1,4 @@
-name: Pull request from a branch to developer/QA/UAT/production
+name: Pull request from any branch to developer/QA/UAT/production
 run-name: ${{ github.actor }} is performing a pull request
 on:
   pull_request:
