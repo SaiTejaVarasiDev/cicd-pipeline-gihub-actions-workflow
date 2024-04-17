@@ -1,0 +1,43 @@
+name: Push code from local repository to base branch
+run-name: ${{ github.actor }} has pushed code to base branch🚀
+on:
+  push:
+    branches:
+      - base
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the Source cod from the latest commit
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      #We need to install NPM so that we can install SFDX CLI tools
+      - name: Install NPM
+        run: |
+            npm install
+      #Install the SFDX CLI using npm command
+      - name: Install the SFDX CLI
+        run: |
+            npm install @salesforce/cli --global
+        # npm install sfdx-cli --global
+        # sfdx force --help
+      - name: sf version
+        run: |
+            sf --version
+      # We need to use a key value stored as GitHub secret and 
+      # create a .key file since 'sf org login jwt' command expects a path 
+      # to .key file as a parameter
+      - name: Create server key file
+        run: |
+            touch server.key
+            echo -e "${{ secrets.SF_CICD_SERVERKEY_DEVELOPER }}" >> server.key
+      #Authenticate Salesforce ORG
+      - name: Authenticate Salesforce ORG
+        run: |
+            sf org login jwt --client-id "${{ secrets.SF_CICD_CONSUMERKEY_DEVELOPER }}" --jwt-key-file server.key --username "${{ secrets.SF_CICD_USERNAME_DEVELOPER }}" --alias my-hub-org 
+      #Validate source code against the org 
+      - name: Validae Source Code Against Salesforce ORG
+        run: |
+            sf project deploy validate -o "${{ secrets.SF_CICD_USERNAME_DEVELOPER }}" --source-dir force-app
