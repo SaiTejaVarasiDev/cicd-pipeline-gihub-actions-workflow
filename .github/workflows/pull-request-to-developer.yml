@@ -14,7 +14,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # environment: production
+    environment: ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
     steps:
       # Checkout the Source cod from the latest commit
       - uses: actions/checkout@v3
@@ -39,15 +39,15 @@ jobs:
       - name: Create server key file
         run: |
             touch server.key
-            echo -e "${{ secrets.SF_CICD_SERVERKEY_DEVELOPER }}" >> server.key
+            echo -e "${{ secrets.SF_CICD_SERVERKEY }}" >> server.key
       #Authenticate Salesforce ORG
       - name: Authenticate Salesforce ORG
         run: |
-            sf org login jwt --client-id "${{ secrets.SF_CICD_CONSUMERKEY_DEVELOPER }}" --jwt-key-file server.key --username "${{ secrets.SF_CICD_USERNAME_DEVELOPER }}" --alias my-hub-org 
+            sf org login jwt --client-id "${{ secrets.SF_CICD_CONSUMERKEY }}" --jwt-key-file server.key --username "${{ secrets.SF_CICD_USERNAME }}" --alias my-hub-org 
       #Validate source code against the org 
       - name: Validae Source Code Against Salesforce ORG
         run: |
-            sf project deploy validate -o "${{ secrets.SF_CICD_USERNAME_DEVELOPER }}" --source-dir force-app
+            sf project deploy validate -o "${{ secrets.SF_CICD_USERNAME }}" --source-dir force-app
       - name: Deploy code 
         if: ${{ github.event.pull_request.merged }}
         run: |
