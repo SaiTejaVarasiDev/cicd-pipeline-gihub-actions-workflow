@@ -19,7 +19,7 @@ jobs:
         id: extract_branch
       - name: print branch name
         shell: bash
-        run: echo "${{ steps.extract_branch.outputs.branch }}"
+        run: echo "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
       #We need to install NPM so that we can install SFDX CLI tools
       - name: Install NPM
         run: |
