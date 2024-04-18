@@ -15,11 +15,8 @@ jobs:
           fetch-depth: 0
       - name: Extract branch name
         shell: bash
-        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})"
+        run: echo running on branch ${GITHUB_REF##*/}
         id: extract_branch
-        # print branch name
-      - name: Get branch name
-        run: echo 'The branch name is' $BRANCH_NAME
       #We need to install NPM so that we can install SFDX CLI tools
       - name: Install NPM
         run: |
