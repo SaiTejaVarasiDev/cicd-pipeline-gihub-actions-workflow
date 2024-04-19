@@ -44,7 +44,7 @@ jobs:
       - name: Validae Source Code Against Salesforce ORG
         run: |
             sf project deploy validate -o "${{ secrets.SF_CICD_USERNAME }}" --source-dir force-app
-      - name: Deploy code 
-        if: ${{ github.event.pull_request.merged }}
-        run: |
-            sf project deploy quick --use-most-recent --target-org my-hub-org
+    #   - name: Deploy code 
+    #     if: ${{ github.event.pull_request.merged }}
+    #     run: |
+    #         sf project deploy quick --use-most-recent --target-org my-hub-org
